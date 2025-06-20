@@ -1,4 +1,3 @@
-# ⚠️ THIS PROJECT IS NOT FINISHED ⚠️
 # CommitLens 🔎
 
 CommitLens is a Python tool to visualise Git commit data from **local repositories** or **GitHub repositories**. It generates interactive charts displaying commit activity, contributor statistics, and file modification patterns, helping developers analyse project history easily.
@@ -15,10 +14,8 @@ CommitLens is a Python tool to visualise Git commit data from **local repositori
   - Top contributors (pie chart)
   - Most edited files (bar chart)
 - Cache system with 4-hour expiration to reduce redundant API calls or local Git parsing.
-- Interactive Tkinter UI to browse charts with next/previous buttons.
-- Save generated charts as PNG images.
-- Delete cache selectively or completely.
 - Respects `.gitignore` rules to ignore unwanted files from analysis.
+- Web UI for better visual
 
 ---
 
@@ -46,27 +43,11 @@ CommitLens is a Python tool to visualise Git commit data from **local repositori
 
 ## Usage 🚀
 
-Run the tool with either a local repository path or a GitHub repository identifier:
 
 ```bash
-python main.py <local_repo_path_or_github_repo>
+python app.py
 ```
-
-Examples:
-
-```bash
-python main.py ./my-local-repo
-python main.py octocat/Hello-World
-python main.py https://github.com/octocat/Hello-World
-```
-
----
-
-## UI Controls 💻
-
-* **Previous / Next**: Cycle through the generated charts.
-* **Save Charts**: Save all charts as PNG images into `./charts` folder.
-* **Delete Cache**: Delete cached data for the current repo to force fresh analysis on next run.
+Then go to ``localhost:5000``
 
 ---
 
@@ -81,9 +62,13 @@ CommitLens/
 │   ├── github_parser.py         # GitHub API repository parser
 │   ├── processing.py            # Data processing logic
 │   ├── visualiser.py            # Chart plotting functions using matplotlib
-│   ├── ui.py                    # Tkinter UI for viewing charts
 │   ├── cache.py                 # Cache handling
 │   └── utils.py                 # Helper functions
+├── static/
+│   └── style.css
+├── templates/
+│   ├── index.html
+│   └── results.html
 ├── main.py                      # Main script to run the tool
 ├── requirements.txt             # Python dependencies
 └── .env.example                 # Environment variables
@@ -96,9 +81,10 @@ CommitLens/
 * Python 3.10+
 * `GitPython`
 * `requests`
-* `matplotlib`
 * `pathspec`
 * `python-dotenv`
+* `Flask`
+* `plotly`
 
 ---
 
