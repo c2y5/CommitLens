@@ -1,10 +1,13 @@
 # src/ui.py
 
 import os
+import sys
+import signal
 import tkinter as tk
 from tkinter import messagebox
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from src.cache import delete_cache
+
 class ChartViewer:
     def __init__(self, figures, chart_dir="charts", repo_type=None, identifier=None):
         self.repo_type = repo_type
@@ -15,6 +18,10 @@ class ChartViewer:
 
         self.root = tk.Tk()
         self.root.title("Git Commit Visualiser - Charts")
+
+        self.root.protocol("WM_DELETE_WINDOW", self.on_exit)
+
+        signal.signal(signal.SIGINT, self.handle_sigint)
 
         self.canvas_frame = tk.Frame(self.root)
         self.canvas_frame.pack()
@@ -69,3 +76,10 @@ class ChartViewer:
                 messagebox.showwarning("Cache", "No cache found for this repo.")
         else:
             messagebox.showwarning("Cache", "Repo info not provided, cannot delete cache.")
+
+    def on_exit(self):
+        self.root.destroy()
+        sys.exit(0)
+
+    def handle_sigint(self, sig, frame):
+        self.on_exit()
