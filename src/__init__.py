@@ -3,7 +3,7 @@
 """
 CommitLens
 ---------------------
-A tool to analyse and visualise Git repository activity.
+A Python tool to visualise Git commit data from local repositories or GitHub repositories.
 """
 
 __version__ = "0.1.0"

@@ -16,15 +16,12 @@ class ChartViewer:
         self.root = tk.Tk()
         self.root.title("Git Commit Visualiser - Charts")
 
-        # Frame for the matplotlib canvas
         self.canvas_frame = tk.Frame(self.root)
         self.canvas_frame.pack()
 
-        # Canvas placeholder for matplotlib figure
         self.canvas = None
         self.display_chart()
 
-        # Buttons frame
         self.btn_frame = tk.Frame(self.root)
         self.btn_frame.pack(pady=10)
 
@@ -36,13 +33,11 @@ class ChartViewer:
         self.root.mainloop()
 
     def display_chart(self):
-        # Clear previous canvas if exists
         if self.canvas is not None:
             self.canvas.get_tk_widget().destroy()
 
         fig = self.figures[self.index]
 
-        # Embed matplotlib figure into Tkinter
         self.canvas = FigureCanvasTkAgg(fig, master=self.canvas_frame)
         self.canvas.draw()
         self.canvas.get_tk_widget().pack()

@@ -68,7 +68,6 @@ class GitHubRepoParser:
                 "files": []
             }
 
-            # Fetch modified files for this commit
             commit_url = commit["url"]
             response = requests.get(commit_url, headers=self.headers)
             if response.status_code == 200:
