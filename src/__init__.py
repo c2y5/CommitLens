@@ -1,7 +1,7 @@
 # src/__init__.py
 
 """
-Git Commit Visualiser
+CommitLens
 ---------------------
 A tool to analyse and visualise Git repository activity.
 """

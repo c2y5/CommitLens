@@ -58,3 +58,26 @@ class GitHubRepoParser:
                 break
         sorted_files = sorted(file_counter.items(), key=lambda x: x[1], reverse=True)
         return sorted_files[:top_n]
+
+    def get_raw_commit_data(self):
+        data = []
+        for i, commit in enumerate(self.commits):
+            entry = {
+                "timestamp": commit["commit"]["author"]["date"],
+                "author": commit["commit"]["author"]["name"],
+                "files": []
+            }
+
+            # Fetch modified files for this commit
+            commit_url = commit["url"]
+            response = requests.get(commit_url, headers=self.headers)
+            if response.status_code == 200:
+                commit_data = response.json()
+                entry["files"] = [f["filename"] for f in commit_data.get("files", [])]
+
+            data.append(entry)
+            if i >= 1000:
+                break
+
+        return data
+    

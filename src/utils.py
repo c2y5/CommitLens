@@ -3,8 +3,7 @@
 import os
 import re
 
-def is_github_url_or_owner_repo(s: str) -> bool:
-    # crude check for "owner/repo" or URL containing github.com
+def is_github_url(s: str) -> bool:
     github_owner_repo = re.compile(r'^[\w.-]+/[\w.-]+$')
     if github_owner_repo.match(s):
         return True
@@ -12,7 +11,7 @@ def is_github_url_or_owner_repo(s: str) -> bool:
         return True
     return False
 
-def extract_owner_repo_from_url(url: str) -> str:
+def extract_github_repo(url: str) -> str:
     # from https://github.com/owner/repo or git@github.com:owner/repo.git
     if url.startswith("git@"):
         # git@github.com:owner/repo.git
