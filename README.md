@@ -83,8 +83,8 @@ CommitLens/
 
 ## Dependencies 🔨
 
-Git
-Python 3.10+
+* [Git](https://git-scm.com/)
+* [Python 3.10+](https://www.python.org/)
 * `GitPython`
 * `requests`
 * `python-dotenv`
