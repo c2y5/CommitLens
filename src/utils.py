@@ -18,7 +18,7 @@ def extract_github_repo(url: str) -> str:
         # git@github.com:owner/repo.git
         parts = url.split(":")
         if len(parts) > 1:
-            repo_part = parts[1]
+            repo_part = parts[1].lower()
             if repo_part.endswith(".git"):
                 repo_part = repo_part[:-4]
             return repo_part
@@ -26,8 +26,8 @@ def extract_github_repo(url: str) -> str:
         # https://github.com/owner/repo or https://github.com/owner/repo.git
         parts = url.split("/")
         if len(parts) >= 5:
-            owner = parts[3]
-            repo = parts[4]
+            owner = parts[3].lower()
+            repo = parts[4].lower()
             if repo.endswith(".git"):
                 repo = repo[:-4]
             return f"{owner}/{repo}"
