@@ -62,7 +62,7 @@ def progress():
 
             if is_github_url(user_input):
                 repo_type = "gh"
-                identifier = extract_github_repo(user_input) if user_input.startswith("http") else user_input
+                identifier = extract_github_repo(user_input)
                 if not GITHUB_TOKENS:
                     yield "GitHub token not found in .env (GITHUB_API_KEY)\n"
                     return
