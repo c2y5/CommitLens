@@ -76,7 +76,7 @@ def progress():
         except Exception as e:
             yield f"Error: {str(e)}\n"
 
-    return Response(stream_generator(), mimetype="text/plain") # type: ignore
+    return Response(stream_generator(), mimetype="text/plain")
 
 @app.route("/results")
 def results():
