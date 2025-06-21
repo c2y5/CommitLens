@@ -37,10 +37,10 @@ CommitLens is a Python tool to visualise Git commit data from **local repositori
    pip install -r requirements.txt
    ```
 
-3. Copy `.env.example` and rename to `.env` with your GitHub API token:
+3. Copy `.env.example` and rename to `.env` with your GitHub API token(s):
 
    ```
-   GITHUB_API_KEY=your_personal_access_token_here
+   GITHUB_API_KEY=token1,token2
    ```
 
 ---
@@ -65,16 +65,17 @@ CommitLens/
 │   ├── parser.py                # Local Git repository parser
 │   ├── github_parser.py         # GitHub API repository parser
 │   ├── processing.py            # Data processing logic
-│   ├── visualiser.py            # Chart plotting functions using matplotlib
+│   ├── visualiser.py            # Creating charts with plotly
 │   ├── cache.py                 # Cache handling
 │   └── utils.py                 # Helper functions
 ├── static/
-│   └── style.css
+│   └── style.css                # Website style
 ├── templates/
-│   ├── index.html
-│   └── results.html
+│   ├── index.html               # Homepage of the website
+│   └── results.html             # Result page of the website
 ├── main.py                      # Main script to run the tool
 ├── requirements.txt             # Python dependencies
+├── setup.sh                     # Initialise the project env
 └── .env.example                 # Environment variables
 ```
 
@@ -82,13 +83,15 @@ CommitLens/
 
 ## Dependencies 🔨
 
-* Python 3.10+
+Python 3.10+
 * `GitPython`
 * `requests`
-* `pathspec`
 * `python-dotenv`
-* `Flask`
+* `pathspec`
+* `flask`
 * `plotly`
+* `Pandas`
+* `gunicorn`
 
 ---
 
