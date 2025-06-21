@@ -7,7 +7,7 @@ from src.parser import LocalGitParser
 from src.github_parser import GitHubRepoParser
 from src.processing import CommitProcessor
 from src.utils import is_github_url, extract_github_repo
-from src.visualiser import plot_line_graph, plot_bar_chart, plot_pie_chart
+from src.visualizer import plot_line_graph, plot_bar_chart, plot_pie_chart
 from src.cache import delete_cache, save_to_cache
 
 app = Flask(__name__)

@@ -1,69 +1,73 @@
+
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <title>Git Analyzer</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    .loader {
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #3498db;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      display: none;
-      margin: 20px auto;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .loading-message {
-      text-align: center;
-      color: #ccc;
-      margin-top: 10px;
-    }
-  </style>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
 </head>
 <body>
+  <div class="loading-bar-container" id="loadingBar">
+    <div class="loading-bar"></div>
+  </div>
   <div class="container">
-    <h1>🔍 Git Commit Analyzer</h1>
-  <form id="analyzeForm">
-  <input type="text" id="repoInput" name="repo_input" placeholder="Enter local path or GitHub repo..." required>
-  <button type="submit">Analyze</button>
-  </form>
+    <div class="glass-card">
+      <h1>🔍 Git Commit Analyzer</h1>
 
-  <pre id="progressDisplay" class="loading-message"></pre>
+      <form id="analyzeForm">
+        <input
+          type="text"
+          id="repoInput"
+          name="repo_input"
+          placeholder="Enter local path or GitHub repo…"
+          required
+        >
+        <button type="submit">Analyze</button>
+      </form>
 
-  <script>
+      <pre id="progressDisplay" class="loading-message"></pre>
+
+
+    </div>
+  </div>
+  <div id="notification"></div>
+
+  <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div class="loader"></div>
+  </div>
+
+   <script>
+    const bar = document.getElementById("loadingBar");
+    function showBar() { bar.style.display = "block"; }
+    function hideBar() { bar.style.display = "none"; }
+
     window.addEventListener("DOMContentLoaded", () => {
-      const shouldReAnalyze = sessionStorage.getItem("reAnalyze");
-      if (shouldReAnalyze === "true") {
+      const shouldRe = sessionStorage.getItem("reAnalyze");
+      if (shouldRe === "true") {
         sessionStorage.setItem("reAnalyze", "false");
-        const input = sessionStorage.getItem("last_repo_input");
-        if (input) {
-          document.querySelector('input[name="repo_input"]').value = input;
-          document.querySelector('#analyzeForm').dispatchEvent(new Event('submit'));
+        const inp = sessionStorage.getItem("last_repo_input");
+        if (inp) {
+          document.getElementById("repoInput").value = inp;
+          document.getElementById("analyzeForm").dispatchEvent(new Event('submit'));
         }
       }
     });
 
     document.getElementById("analyzeForm").addEventListener("submit", function(e) {
       e.preventDefault();
+      showBar();
+
       const input = document.getElementById("repoInput").value;
       const display = document.getElementById("progressDisplay");
-      display.textContent = "Starting analysis...\n";
+      display.textContent = "Starting analysis…\n";
+      display.style.display = "block";
 
       sessionStorage.setItem("last_repo_input", input);
 
       fetch("/progress", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({ repo_input: input })
       }).then(response => {
         const reader = response.body.getReader();
@@ -75,25 +79,24 @@
             if (done) return;
 
             buffer += decoder.decode(value, { stream: true });
-
             const lines = buffer.split("\n");
             const lastLine = lines[lines.length - 2] || "";
 
             if (lastLine.includes("__COMPLETE__")) {
-              display.textContent = "Analysis complete. Redirecting...";
+              hideBar();
+              display.textContent = "Analysis complete. Redirecting…";
               window.location.href = "/results";
               return;
             }
 
-            if (lastLine) {
-              display.textContent = lastLine;
-            }
-
+            if (lastLine) display.textContent = lastLine;
             readChunk();
           });
         }
 
         readChunk();
+      }).catch(() => {
+        hideBar();
       });
     });
   </script>

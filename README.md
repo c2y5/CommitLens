@@ -1,6 +1,6 @@
 # CommitLens 🔎
 
-CommitLens is a Python tool to visualise Git commit data from **local repositories** or **GitHub repositories**. It generates interactive charts displaying commit activity, contributor statistics, and file modification patterns, helping developers analyse project history easily.
+CommitLens is a Python tool to visualize Git commit data from **local repositories** or **GitHub repositories**. It generates interactive charts displaying commit activity, contributor statistics, and file modification patterns, helping developers analyze project history easily.
 
 [Try it out yourself here!](https://commitlens.iamsky.hackclub.app)
 
@@ -13,7 +13,7 @@ CommitLens is a Python tool to visualise Git commit data from **local repositori
 ## Features 🔥
 
 - Supports **local Git repositories** and **GitHub repositories** via API.
-- Visualises:
+- Visualizes:
   - Commits per day and week (line charts)
   - Top contributors (pie chart)
   - Most edited files (bar chart)
@@ -65,7 +65,7 @@ CommitLens/
 │   ├── parser.py                # Local Git repository parser
 │   ├── github_parser.py         # GitHub API repository parser
 │   ├── processing.py            # Data processing logic
-│   ├── visualiser.py            # Creating charts with plotly
+│   ├── visualizer.py            # Creating charts with plotly
 │   ├── cache.py                 # Cache handling
 │   └── utils.py                 # Helper functions
 ├── static/
@@ -83,6 +83,7 @@ CommitLens/
 
 ## Dependencies 🔨
 
+Git
 Python 3.10+
 * `GitPython`
 * `requests`

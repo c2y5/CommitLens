@@ -1,55 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+:root {
+  --bg: #121212;
+  --fg: #E0E0E0;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --accent: #BB86FC;
+  --accent-2: #03DAC6;
+  --shadow: rgba(0,0,0,0.7);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0; padding: 0;
+  font-family: 'Inter', sans-serif;
+  color: var(--fg);
+  transition: all 0.3s ease;
+}
+
 body {
-  background-color: #1e1e2f;
-  color: #f0f0f0;
-  font-family: 'Segoe UI', sans-serif;
-  margin: 0;
+  background: var(--bg);
   padding: 2rem;
+  line-height: 1.5;
 }
 
 .container {
-  max-width: 600px;
+  max-width: 80%;
   margin: auto;
-  text-align: center;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px var(--shadow);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+h1, h2 {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
 }
 
 input[type="text"] {
-  padding: 0.6rem;
-  width: 80%;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  color: var(--fg);
+  font-size: 1rem;
   margin-bottom: 1rem;
-  border-radius: 5px;
-  border: none;
+}
+
+input::placeholder {
+  color: rgba(255,255,255,0.6);
 }
 
 button {
-  padding: 0.6rem 1.2rem;
+  display: inline-block;
+  padding: 0.7rem 1.5rem;
+  background: var(--accent);
+  color: var(--bg);
   border: none;
-  background-color: #009688;
-  color: white;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
 }
 
-.flash.error {
-  color: #ff4d4f;
+button::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: rgba(255,255,255,0.2);
+  transform: skewX(-20deg);
+  transition: left 0.5s;
 }
 
-.charts img {
+button:hover::after {
+  left: 200%;
+}
+
+button:hover {
+  background: var(--accent-2);
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+.chart-frame {
   width: 100%;
-  margin-top: 1rem;
-  border-radius: 10px;
-}
-
-.analyze-button {
-  padding: 0.6rem 1.2rem;
-  background-color: #607d8b;
-  color: white;
+  height: 400px;
+  border-radius: 16px;
   border: none;
-  border-radius: 5px;
-  margin-top: 2rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  overflow: hidden;
 }
 
-.analyze-button:hover {
-  background-color: #455a64;
+#notification {
+  position: fixed;
+  top: 1.5rem; left: 50%;
+  transform: translateX(-50%);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-weight: 500;
+  display: none;
+  z-index: 999;
+  backdrop-filter: blur(6px);
+}
+
+.notification-success {
+  background: #2e7d32;
+}
+
+.notification-error {
+  background: #b00020;
+}
+
+.loading-bar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+  z-index: 1000;
+  display: none;
+}
+
+.loading-bar {
+  position: absolute;
+  left: -40%;
+  width: 40%;
+  height: 100%;
+  background: var(--accent);
+  animation: loading 1.2s ease-in-out infinite;
+}
+
+.loading-message {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.9rem;
+  color: var(--fg);
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+}
+
+@keyframes loading {
+  0%   { left: -40%; width: 40%; }
+  50%  { left: 100%;  width: 60%; }
+  100% { left: 100%;  width: 40%; }
+}
+
+.chart-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px var(--shadow);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.button-group {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.button-group form,
+.button-group > button {
+  margin: 0;
 }
