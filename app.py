@@ -72,7 +72,11 @@ def progress():
                 identifier = os.path.abspath(user_input)
                 parser = LocalGitParser(identifier)
 
-            yield from parser.get_raw_commit_data_yielding()
+            result = yield from parser.get_raw_commit_data_yielding()
+
+            if result == 2:
+                yield "Rate limit exceeded. Please try again later.\n"
+                return
 
             raw_commits = parser.get_raw_commit_data()
             if not raw_commits:
