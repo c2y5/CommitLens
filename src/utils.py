@@ -1,6 +1,5 @@
 # src/utils.py
 
-import os
 import re
 
 def is_github_url(s: str) -> bool:
@@ -12,7 +11,9 @@ def is_github_url(s: str) -> bool:
     return False
 
 def extract_github_repo(url: str) -> str:
-    # from https://github.com/owner/repo or git@github.com:owner/repo.git
+    if url.startswith("github.com/"):
+        url = "https://" + url
+
     if url.startswith("git@"):
         # git@github.com:owner/repo.git
         parts = url.split(":")
@@ -30,10 +31,5 @@ def extract_github_repo(url: str) -> str:
             if repo.endswith(".git"):
                 repo = repo[:-4]
             return f"{owner}/{repo}"
-        if len(parts) >= 3 and parts[0].lower() == "github.com":
-            owner = parts[1]
-            repo = parts[2]
-            if repo.endswith(".git"):
-                repo = repo[:-4]
-            return f"{owner}/{repo}"
+
     raise ValueError("Invalid GitHub repo URL")
