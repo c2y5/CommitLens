@@ -60,6 +60,8 @@ def save_to_cache(repo_type: str, identifier: str, new_commits):
     unique_new_commits = [c for c in new_commits if c["timestamp"] not in existing_ts]
 
     if not unique_new_commits:
+        all_cache[key]["timestamp"] = datetime.now(timezone.utc).isoformat()
+        _save_all_cache(all_cache)
         return
 
     combined = existing_commits + unique_new_commits
@@ -81,7 +83,7 @@ def delete_cache(repo_type=None, identifier=None):
     key = _make_cache_key(repo_type, identifier)
     all_cache = _load_all_cache()
     if key in all_cache:
-        del all_cache[key]
+        all_cache[key]["timestamp"] = "2000-01-01T00:00:00.000000+00:00"
         _save_all_cache(all_cache)
         return True
     return False

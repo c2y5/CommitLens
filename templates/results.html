@@ -4,19 +4,94 @@
   <meta charset="UTF-8">
   <title>Results</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    #notification {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      padding: 1rem 2rem;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      display: none;
+      pointer-events: none;
+    }
+
+    .notification-success {
+      background-color: #28a745;
+    }
+
+    .notification-error {
+      background-color: #dc3545;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h2>📈 Analysis Results</h2>
+
     <div class="charts">
       {% for chart in charts %}
         <iframe src="{{ url_for('static', filename=chart.split('static/')[-1]) }}"
                 width="100%" height="500" frameborder="0" style="margin-bottom: 2rem;"></iframe>
       {% endfor %}
     </div>
+
     <form action="{{ url_for('index') }}" method="get">
-    <button type="submit" class="analyze-button">🔁 Analyze Another</button>
-  </form>
+      <button type="submit" class="analyze-button">🔁 Analyze Another</button>
+    </form>
+
+    <button onclick="invalidateCache()" class="analyze-button" style="margin-top: 10px;">🗑️ Invalidate Cache</button>
   </div>
+
+  <div id="notification"></div>
+
+  <script>
+    function invalidateCache() {
+      const repo = sessionStorage.getItem("last_repo_input");
+      if (!repo) {
+        showNotification("No repository identifier found.", false);
+        return;
+      }
+
+      fetch("/cache/invalidate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ repo_input: repo })
+      })
+      .then(res => res.json().then(data => ({
+        status: res.ok,
+        body: data
+      })))
+      .then(({ status, body }) => {
+        showNotification(body.message || "Unknown response", status);
+
+        if (status) {
+          // Redirect to index after short delay and trigger auto re-analyze
+          setTimeout(() => {
+            sessionStorage.setItem("reAnalyze", "true");
+            window.location.href = "/";
+          }, 1500);
+        }
+      })
+      .catch(() => {
+        showNotification("Error invalidating cache", false);
+      });
+    }
+
+    function showNotification(message, isSuccess) {
+      const box = document.getElementById("notification");
+      box.textContent = message;
+      box.className = isSuccess ? "notification-success" : "notification-error";
+      box.style.display = "block";
+      setTimeout(() => {
+        box.style.display = "none";
+      }, 4000);
+    }
+  </script>
 </body>
 </html>

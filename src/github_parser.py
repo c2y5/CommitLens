@@ -75,6 +75,11 @@ class GitHubRepoParser:
 
         save_to_cache(self.repo_type, self.cache_id, self.commits)
 
+        cached = load_cached_data(self.repo_type, self.cache_id)
+        if cached:
+            self.commits = cached
+            yield f"Using cached data ({len(cached)} commits)\n"
+
     def get_raw_commit_data(self):
         return self.commits
 
