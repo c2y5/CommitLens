@@ -7,7 +7,7 @@ from .cache import load_cached_data, save_to_cache, get_latest_cached_timestamp
 import random
 
 class GitHubRepoParser:
-    def __init__(self, owner_repo: str, access_token: str):
+    def __init__(self, owner_repo: str, access_token: list):
         self.owner_repo = owner_repo
         self.access_tokens = access_token
         self.base_url = f"https://api.github.com/repos/{self.owner_repo}"

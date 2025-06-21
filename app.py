@@ -28,10 +28,12 @@ def progress():
     user_input = request.form.get("repo_input")
 
     @stream_with_context
-    def generate():
+    def stream_generator():
         global generated_charts
         try:
-            token = random.choice(GITHUB_TOKENS) if GITHUB_TOKENS else None
+            if not user_input:
+                yield "No repository input provided.\n"
+                return
 
             if is_github_url(user_input):
                 repo_type = "gh"
@@ -74,7 +76,7 @@ def progress():
         except Exception as e:
             yield f"Error: {str(e)}\n"
 
-    return Response(generate(), mimetype="text/plain")
+    return Response(stream_generator(), mimetype="text/plain") # type: ignore
 
 @app.route("/results")
 def results():
