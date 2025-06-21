@@ -2,7 +2,7 @@
 
 import os
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 CACHE_FILE = "cache/data.json"
 CACHE_AGE_LIMIT = timedelta(hours=4)
@@ -22,7 +22,7 @@ def _save_all_cache(all_data):
         json.dump(all_data, f, indent=2)
 
 def _make_cache_key(repo_type: str, identifier: str) -> str:
-    return f"{repo_type}:{identifier}"  # e.g. "gh:octocat/Hello-World" or "local:/path/to/repo"
+    return f"{repo_type}:{identifier}"
 
 def load_cached_data(repo_type: str, identifier: str):
     key = _make_cache_key(repo_type, identifier)
@@ -31,16 +31,43 @@ def load_cached_data(repo_type: str, identifier: str):
         return None
     entry = all_cache[key]
     timestamp = datetime.fromisoformat(entry["timestamp"])
-    if datetime.utcnow() - timestamp > CACHE_AGE_LIMIT:
+    if datetime.now(timezone.utc) - timestamp > CACHE_AGE_LIMIT:
         return None
     return entry["commits"]
 
-def save_to_cache(repo_type: str, identifier: str, commits):
+def get_latest_cached_timestamp(repo_type: str, identifier: str):
     key = _make_cache_key(repo_type, identifier)
     all_cache = _load_all_cache()
+    commits = all_cache.get(key, {}).get("commits", [])
+    if not commits:
+        return None
+    return max(c["timestamp"] for c in commits)
+
+def save_to_cache(repo_type: str, identifier: str, new_commits):
+    key = _make_cache_key(repo_type, identifier)
+    all_cache = _load_all_cache()
+
+    if key not in all_cache:
+        all_cache[key] = {
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "commits": new_commits
+        }
+        _save_all_cache(all_cache)
+        return
+
+    existing_commits = all_cache[key]["commits"]
+    existing_ts = {c["timestamp"] for c in existing_commits}
+    unique_new_commits = [c for c in new_commits if c["timestamp"] not in existing_ts]
+
+    if not unique_new_commits:
+        return
+
+    combined = existing_commits + unique_new_commits
+    combined.sort(key=lambda c: c["timestamp"])
+
     all_cache[key] = {
-        "timestamp": datetime.utcnow().isoformat(),
-        "commits": commits
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "commits": combined
     }
     _save_all_cache(all_cache)
 

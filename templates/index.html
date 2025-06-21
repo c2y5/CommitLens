@@ -4,19 +4,84 @@
   <meta charset="UTF-8">
   <title>Git Analyzer</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      display: none;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-message {
+      text-align: center;
+      color: #ccc;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>🔍 Git Commit Analyzer</h1>
-    <form method="POST">
-      <input type="text" name="repo_input" placeholder="Enter local path or GitHub repo..." required>
-      <button type="submit">Analyze</button>
-    </form>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% for category, message in messages %}
-        <p class="flash {{ category }}">{{ message }}</p>
-      {% endfor %}
-    {% endwith %}
-  </div>
+  <form id="analyzeForm">
+  <input type="text" id="repoInput" name="repo_input" placeholder="Enter local path or GitHub repo..." required>
+  <button type="submit">Analyze</button>
+  </form>
+
+  <pre id="progressDisplay" class="loading-message"></pre>
+
+  <script>
+  document.getElementById("analyzeForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const input = document.getElementById("repoInput").value;
+    const display = document.getElementById("progressDisplay");
+    display.textContent = "Starting analysis...\n";
+
+    fetch("/progress", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({ repo_input: input })
+    }).then(response => {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      function readChunk() {
+        reader.read().then(({ done, value }) => {
+          if (done) return;
+
+          buffer += decoder.decode(value, { stream: true });
+
+          const lines = buffer.split("\n");
+          const lastLine = lines[lines.length - 2] || "";
+
+          if (lastLine.includes("__COMPLETE__")) {
+            display.textContent = "Analysis complete. Redirecting...";
+            window.location.href = "/results";
+            return;
+          }
+
+          if (lastLine) {
+            display.textContent = lastLine;
+          }
+
+          readChunk();
+        });
+      }
+
+      readChunk();
+    });
+  });
+</script>
 </body>
 </html>

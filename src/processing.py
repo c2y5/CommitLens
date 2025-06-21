@@ -28,8 +28,15 @@ class CommitProcessor:
         return counter.most_common(top_n)
 
     def most_edited_files(self, top_n=5) -> List[Tuple[str, int]]:
-        file_counter = Counter()
+        file_changes = Counter()
         for c in self.commits:
             for f in c.get("files", []):
-                file_counter[f] += 1
-        return file_counter.most_common(top_n)
+                if isinstance(f, dict):
+                    filename = f.get("filename")
+                    insertions = f.get("insertions", 0)
+                    deletions = f.get("deletions", 0)
+                    if filename:
+                        file_changes[filename] += insertions + deletions
+                elif isinstance(f, str):
+                    file_changes[f] += 1
+        return file_changes.most_common(top_n)
