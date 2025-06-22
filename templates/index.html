@@ -50,7 +50,7 @@
         const inp = sessionStorage.getItem("last_repo_input");
         if (inp) {
           document.getElementById("repoInput").value = inp;
-          document.getElementById("analyzeForm").dispatchEvent(new Event('submit'));
+          document.getElementById("analyzeForm").dispatchEvent(new Event("submit"));
         }
       }
     });

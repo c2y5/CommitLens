@@ -3,7 +3,7 @@
 import re
 
 def is_github_url(s: str) -> bool:
-    github_owner_repo = re.compile(r'^[\w.-]+/[\w.-]+$')
+    github_owner_repo = re.compile(r"^[\w.-]+/[\w.-]+$")
     if github_owner_repo.match(s):
         return True
     if "github.com" in s.lower():

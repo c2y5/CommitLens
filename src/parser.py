@@ -29,7 +29,7 @@ class LocalGitParser:
             self.ignore_spec = pathspec.PathSpec.from_lines("gitwildmatch", [])
 
     def _is_ignored(self, filepath):
-        return self.ignore_spec.match_file(filepath.replace(os.sep, '/'))
+        return self.ignore_spec.match_file(filepath.replace(os.sep, "/"))
 
     def get_raw_commit_data_yielding(self):
         cached = load_cached_data(self.repo_type, self.cache_id)

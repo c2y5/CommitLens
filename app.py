@@ -11,7 +11,7 @@ from src.visualizer import plot_line_graph, plot_bar_chart, plot_pie_chart
 from src.cache import delete_cache, save_to_cache
 
 app = Flask(__name__)
-app.secret_key = 'flaskapp_secret_key'
+app.secret_key = "flaskapp_secret_key"
 load_dotenv()
 
 GITHUB_TOKENS = os.getenv("GITHUB_API_KEY", "").split(",")
@@ -19,7 +19,7 @@ GITHUB_TOKENS = [t.strip() for t in GITHUB_TOKENS if t.strip()]
 
 generated_charts = []
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/", methods=["GET", "POST"])
 def index():
     return render_template("index.html")
 
